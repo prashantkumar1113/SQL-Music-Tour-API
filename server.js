@@ -11,6 +11,9 @@ app.use(express.urlencoded({extended: false}));
 const bandsController = require("./controllers/bands_controller");
 app.use("/bands", bandsController);
 
+const eventsController = require("./controllers/events_controller");
+app.use("/events", eventsController);
+
 // ROOT
 app.get("/", (req, res) => {
     res.status(200).json({
