@@ -7,8 +7,34 @@ const {Op} = require("sequelize");
 // FIND A SPECIFIC EVENT
 events.get("/:id", async (req, res) => {
     try {
+        console.log("events/id");
         const foundEvent = await Event.findOne({
-            where: {event_id: req.params.id},
+            where: {name: req.params.name},
+            include: [
+                {
+                    model: MeetGreet,
+                    as: "meet_greets",
+                    attributes: {exclude: ["event_id", "band_id"]},
+                    include: {
+                        model: Band,
+                        as: "band",
+                    },
+                },
+                {
+                    model: SetTime,
+                    as: "set_times",
+                    attributes: {exclude: ["event_id", "stage_id", "band_id"]},
+                    include: [
+                        {model: Band, as: "band"},
+                        {model: Stage, as: "stage"},
+                    ],
+                },
+                {
+                    model: Stage,
+                    as: "stages",
+                    through: {attributes: []},
+                },
+            ],
         });
         res.status(200).json(foundEvent);
     } catch (error) {
